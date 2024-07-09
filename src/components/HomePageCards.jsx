@@ -6,14 +6,40 @@ import Button from "@cloudscape-design/components/button";
 import Link from "@cloudscape-design/components/link";
 import Header from "@cloudscape-design/components/header";
 
+let itemList = [];
+
 export default () => {
-    const itemList = [{ "name": "Pradhan Mantri Jan Dhan Yojana (PMJDY)", "description": "Provides basic banking accounts with overdraft facilities, RuPay debit cards, and micro-insurance to promote financial inclusion.", "eligibility": "Unbanked and underbanked population", "website_url": "https://www.pmjdy.gov.in/" }, { "name": "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)", "description": "Guarantees 100 days of wage employment in a year to rural households for unskilled manual work. Provides a social safety net for the rural poor.", "eligibility": "Rural households with adult members willing to do unskilled manual work", "website_url": "https://mnrega.nic.in/" }, { "name": "Swachh Bharat Mission (SBM)", "description": "Aims to eliminate open defecation and create a clean India by improving sanitation conditions.", "eligibility": "All citizens of India", "website_url": "https://swachhbharatmission.gov.in/" }, { "name": "Pradhan Mantri Ujjwala Yojana (PMUY)", "description": "Provides LPG connections to poor families to replace traditional cooking fuels and improve health by reducing indoor air pollution.", "eligibility": "Poor families", "website_url": "https://pmujjwalayोजना.gov.in/" }, { "name": "Beti Bachao Beti Padhao (BBBP)", "description": "Aims to improve the survival and education of girls to address the issue of declining child sex ratio.", "eligibility": "All citizens of India (awareness campaign)", "website_url": "https://betibachaopadhao.gov.in/" }];
     const [
         selectedItems,
         setSelectedItems
     ] = React.useState();
     const [disabled, setDisabled] = React.useState(true);
+    const [isLoading, setIsLoading] = React.useState(true);
+    React.useEffect(() => {
+        const fetchResults = async (url) => {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                itemList = data;
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        };
+        fetchResults('http://localhost:8000/search');
+
+    }, []);
     return (
         <Cards
             onSelectionChange={({ detail }) => {
@@ -50,7 +76,8 @@ export default () => {
                 { minWidth: 500, cards: 2 }
             ]}
             items={itemList}
-            loadingText="Loading resources"
+            loading={isLoading}
+            loadingText="Loading schemes"
             trackBy="name"
             empty={
                 <Box
@@ -59,8 +86,7 @@ export default () => {
                     color="inherit"
                 >
                     <SpaceBetween size="m">
-                        <b>No resources</b>
-                        <Button>Create resource</Button>
+                        <b>Enable location access to get featured schemes</b>
                     </SpaceBetween>
                 </Box>
             }
