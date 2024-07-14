@@ -8,7 +8,7 @@ export default () => {
   return (
     <TopNavigation
       identity={{
-        href: "#",
+        href: "/",
         title: "Benefict",
         logo: {
           src: logo,
@@ -25,16 +25,11 @@ export default () => {
           disableUtilityCollapse: false
         },
         {
-          type: "menu-dropdown",
+          type: "button",
           iconName: "settings",
           ariaLabel: "Settings",
           title: "Settings",
-          items: [
-            {
-              id: "profile",
-              text: "Profile Settings"
-            }
-          ]
+          href: "/editProfile"
         }
       ]}
       search={
