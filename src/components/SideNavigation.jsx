@@ -5,8 +5,7 @@ import {
 export default () => {
     return (<SideNavigation
         header={{
-            href: '#',
-            text: 'Service name',
+            text: 'Features'
         }}
     />);
 }
