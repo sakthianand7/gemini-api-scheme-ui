@@ -10,17 +10,17 @@ import SideNavigation from '../components/SideNavigation';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './HomePage';
 import EditProfileTable from './EditProfileTable';
-import SearchResultsPage from './SearchResults';
+import ChatPopUp from './ChatPopUp';
 const LOCALE = 'en';
 let search_query = "";
 export default function LandingPage() {
+  const [searchQuery, setSearchQuery] = React.useState();
   const [navOpen, setNavOpen] = React.useState(false);
-  function getSearchQuery(query) {
-    search_query = query
-  }
+  const [profile, setProfile] = React.useState();
+
   return (
     <I18nProvider locale={LOCALE} messages={[messages]}>
-      <TopNavigation setQuery={getSearchQuery} />
+      <TopNavigation setQuery={setSearchQuery} setProfile={setProfile} />
       <AppLayout
         navigationOpen={navOpen}
         toolsHide={true}
@@ -29,18 +29,19 @@ export default function LandingPage() {
           <SideNavigation />
         }
         content={
-
-          <BrowserRouter>
-            <Routes>
-              <Route>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/editProfile" element={<EditProfileTable />} />
-                <Route path="/search" element={<SearchResultsPage
-                  data={search_query}
-                />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
+          <div>
+            <BrowserRouter>
+              <Routes>
+                <Route>
+                  <Route path="/" element={<HomePage
+                    profile={profile}
+                  />} />
+                  <Route path="/editProfile" element={<EditProfileTable />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+            <ChatPopUp/>
+          </div>
         }
       />
     </I18nProvider>

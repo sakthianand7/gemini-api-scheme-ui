@@ -35,14 +35,14 @@ export default function EditProfileTable() {
         },
         {
             name: "Mother",
-            occupation: "This is the first item",
-            gender: "1A",
-            age: "Small",
+            occupation: "Homemaker",
+            gender: "Female",
+            age: 40,
             location: "Chennai",
-            monthly_income: 1000,
-            marital_status: "No",
-            number_of_dependents: 0,
-            disability_status: "No disability"
+            monthly_income: 10000,
+            marital_status: "Married",
+            number_of_dependents: 2,
+            disability_status: "None"
         }
     ]
     return (

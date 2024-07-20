@@ -7,5 +7,10 @@ export default () => {
         header={{
             text: 'Features'
         }}
+        items={
+            [{ type: "link", text: "Home Page", href: "/" },
+            { type: "link", text: "Edit Profile", href: "/editProfile" }
+        ]
+        }
     />);
 }

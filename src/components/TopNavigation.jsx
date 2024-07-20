@@ -3,7 +3,30 @@ import TopNavigation from "@cloudscape-design/components/top-navigation";
 import Autosuggest from "@cloudscape-design/components/autosuggest";
 import logo from './logo-small-top-navigation.svg';
 
-export default ({ setQuery }) => {
+const idProfileMapping = {
+  "Self": {
+    occupation: "Government Employee",
+    gender: "male",
+    age: 27,
+    location: "Chennai",
+    monthly_income: 10000,
+    marital_status: "Single",
+    number_of_dependents: 2,
+    disability_status: "None"
+  },
+  "Mother": {
+    occupation: "Homemaker",
+    gender: "Female",
+    age: 40,
+    location: "Chennai",
+    monthly_income: 10000,
+    marital_status: "Married",
+    number_of_dependents: 2,
+    disability_status: "None"
+  }
+}
+
+export default ({ setQuery, setProfile }) => {
   const [searchInput, setSearchInput] = React.useState("");
   const [profileName, setProfileName] = React.useState("Self");
   const suggestions = [
@@ -11,6 +34,7 @@ export default ({ setQuery }) => {
     { value: "Scheme to help with childcare expenses" },
     { value: "Scheme to help with medical bills" }
   ];
+  setProfile(idProfileMapping[profileName])
 
   function handleSearchChange(value) {
     setSearchInput(value);
@@ -62,12 +86,8 @@ export default ({ setQuery }) => {
           {
             id: "Mother",
             text: "Mother"
-          },
-          {
-            id: "Father",
-            text: "Father"
           }],
-          onItemClick: ({ detail }) => { setProfileName(detail.id); console.log(detail); }
+          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[profileName]); }
         }
       ]}
       search={

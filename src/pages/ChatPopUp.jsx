@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './ChatPopup.css'; // Import the CSS file for styling
-import {
-    ContentLayout,
-    SpaceBetween,
-    Container
-} from '@cloudscape-design/components';
+import './ChatPopup.css';
 
 const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     const [message, setMessage] = useState('');
@@ -59,7 +54,7 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     );
 };
 
-const SearchResults = () => {
+const ChatPopUp = (props) => {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -81,20 +76,14 @@ const SearchResults = () => {
         setMessages((prevMessages) => [...prevMessages, { type: 'received', text: messageText }]);
     };
     return (
-        <ContentLayout
-        >
-            <SpaceBetween direction="horizontal" size='l' />
-            <Container
-            >
-                <div className="App">
-                    <button className="chat-button" onClick={toggleChat}>
-                        {isChatVisible ? 'Close Chat' : 'Open Chat'}
-                    </button>
-                    <ChatWindow isVisible={isChatVisible} onClose={toggleChat} messages={messages} onSend={handleSend} loading={loading} />
-                </div>
-            </Container>
-        </ContentLayout>
+
+        <div className="App">
+            <button className="chat-button" onClick={toggleChat}>
+                {isChatVisible ? 'Close Chat' : 'Open Chat'}
+            </button>
+            <ChatWindow isVisible={isChatVisible} onClose={toggleChat} messages={messages} onSend={handleSend} loading={loading} />
+        </div>
     );
 };
 
-export default SearchResults;
+export default ChatPopUp;

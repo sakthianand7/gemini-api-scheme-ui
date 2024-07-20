@@ -4,12 +4,16 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #010120; /* Blueish black color */
+  background-color: #010120;
+  /* Blueish black color */
   color: white;
   border: none;
-  border-radius: 8px; /* Rounded corners */
-  width: 100px; /* Adjusted width */
-  height: 40px; /* Adjusted height */
+  border-radius: 8px;
+  /* Rounded corners */
+  width: 100px;
+  /* Adjusted width */
+  height: 40px;
+  /* Adjusted height */
   font-size: 16px;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -43,6 +47,7 @@
   from {
     transform: translateY(100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -108,9 +113,17 @@
 }
 
 @keyframes loading {
-  0% { width: 0; }
-  50% { width: 50px; }
-  100% { width: 0; }
+  0% {
+    width: 0;
+  }
+
+  50% {
+    width: 50px;
+  }
+
+  100% {
+    width: 0;
+  }
 }
 
 .chat-popup-footer {

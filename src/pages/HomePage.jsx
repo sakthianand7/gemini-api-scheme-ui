@@ -5,19 +5,23 @@ import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
 import Link from "@cloudscape-design/components/link";
 import Header from "@cloudscape-design/components/header";
+
 import {
     Container,
     ContentLayout
 } from '@cloudscape-design/components';
 let itemList = [];
 
-export default () => {
+const LOCAL_HOST = "http://localhost:8000"
+
+export default (props) => {
     const [
         selectedItems,
         setSelectedItems
     ] = React.useState();
     const [disabled, setDisabled] = React.useState(true);
     const [isLoading, setIsLoading] = React.useState(true);
+
     React.useEffect(() => {
         const fetchResults = async (url) => {
             try {
@@ -40,9 +44,25 @@ export default () => {
                 console.error('Fetch error:', error);
             }
         };
-        fetchResults('http://localhost:8000/search');
+        fetchResults(`${LOCAL_HOST}/search`);
 
     }, []);
+
+    async function checkEligibility(url, schemeName) {
+        const messageBody = props.profile;
+        messageBody.governmentScheme = schemeName;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messageBody)
+
+        })
+        const result = await response.json();
+        console.log(result);
+    }
+
     return (
         <ContentLayout
             header={
@@ -61,7 +81,7 @@ export default () => {
             >
                 <Cards
                     onSelectionChange={({ detail }) => {
-                        setSelectedItems(detail?.selectedItems ?? [])
+                        setSelectedItems(detail.selectedItems);
                         setDisabled(false);
                     }
                     }
@@ -117,10 +137,16 @@ export default () => {
                                     direction="horizontal"
                                     size="xs"
                                 >
-                                    <Button variant="normal" disabled={disabled}>
+                                    <Button variant="normal" disabled={disabled} onClick={() => {
+                                        setSelectedItems()
+                                        setDisabled(true)
+                                    }
+                                    }>
                                         Clear
                                     </Button>
-                                    <Button variant="primary" disabled={disabled}>
+                                    <Button variant="primary" disabled={disabled} onClick={() => {
+                                        checkEligibility(`${LOCAL_HOST}/chat`, selectedItems[0].name);
+                                    }}>
                                         Check Eligibility
                                     </Button>
                                 </SpaceBetween>
@@ -129,6 +155,7 @@ export default () => {
                         </Header>
                     }
                 />
+
             </Container>
         </ContentLayout>
 
