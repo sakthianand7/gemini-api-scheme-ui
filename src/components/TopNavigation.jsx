@@ -3,38 +3,60 @@ import TopNavigation from "@cloudscape-design/components/top-navigation";
 import Autosuggest from "@cloudscape-design/components/autosuggest";
 import logo from './logo-small-top-navigation.svg';
 
-const idProfileMapping = {
-  "Self": {
-    occupation: "Government Employee",
-    gender: "male",
-    age: 27,
-    location: "Chennai",
-    monthly_income: 10000,
-    marital_status: "Single",
-    number_of_dependents: 2,
-    disability_status: "None"
-  },
-  "Mother": {
-    occupation: "Homemaker",
-    gender: "Female",
-    age: 40,
-    location: "Chennai",
-    monthly_income: 10000,
-    marital_status: "Married",
-    number_of_dependents: 2,
-    disability_status: "None"
-  }
-}
+const LOCAL_HOST = "http://localhost:8000"
 
+let idProfileMapping = {};
+let profileList = [];
 export default ({ setQuery, setProfile }) => {
   const [searchInput, setSearchInput] = React.useState("");
   const [profileName, setProfileName] = React.useState("Self");
+
   const suggestions = [
     { value: "Am I eligible for Mudra Yojana" },
     { value: "Scheme to help with childcare expenses" },
     { value: "Scheme to help with medical bills" }
   ];
-  setProfile(idProfileMapping[profileName])
+
+  const transformArrayToIdText = (array) => {
+    return array.map(item => {
+      const { id, text } = item; // Extract only id and text
+      return { id, text };
+    });
+  };
+  const transformArrayToKeyValue = (array) => {
+    const result = {};
+    array.forEach(item => {
+      const { id, text, ...rest } = item; // Exclude "text" key
+      result[id] = rest;
+    });
+    return result;
+  };
+  React.useEffect(() => {
+    const fetchResults = async (url) => {
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        idProfileMapping = transformArrayToKeyValue(data);
+        profileList = transformArrayToIdText(data);
+        setProfile(idProfileMapping[profileName])
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    };
+    fetchResults(`${LOCAL_HOST}/getProfiles/sakthi_anand`);
+
+  }, []);
 
   function handleSearchChange(value) {
     setSearchInput(value);
@@ -79,15 +101,8 @@ export default ({ setQuery, setProfile }) => {
           type: "menu-dropdown",
           iconName: "user-profile",
           text: profileName,
-          items: [{
-            id: "Self",
-            text: "Self"
-          },
-          {
-            id: "Mother",
-            text: "Mother"
-          }],
-          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[profileName]); }
+          items: profileList,
+          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[detail.id]) }
         }
       ]}
       search={

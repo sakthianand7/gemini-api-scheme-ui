@@ -4,6 +4,7 @@
   "author": "Sakthi Anand",
   "private": true,
   "dependencies": {
+    "@cloudscape-design/chat-components": "^1.0.5",
     "@cloudscape-design/components": "^3.0.671",
     "@cloudscape-design/global-styles": "^1.0.30",
     "@testing-library/jest-dom": "^5.17.0",

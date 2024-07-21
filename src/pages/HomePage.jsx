@@ -5,10 +5,12 @@ import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
 import Link from "@cloudscape-design/components/link";
 import Header from "@cloudscape-design/components/header";
+import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
 
 import {
     Container,
-    ContentLayout
+    ContentLayout,
+    Modal
 } from '@cloudscape-design/components';
 let itemList = [];
 
@@ -21,7 +23,11 @@ export default (props) => {
     ] = React.useState();
     const [disabled, setDisabled] = React.useState(true);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [isEligibilityLoading, setIsEligibilityLoading] = React.useState(false);
+    const [isModelVisible, setIsModalVisible] = React.useState(false);
+    const [eligibilityResult, setEligibilityResult] = React.useState();
 
+    console.log(props.profile);
     React.useEffect(() => {
         const fetchResults = async (url) => {
             try {
@@ -60,6 +66,8 @@ export default (props) => {
 
         })
         const result = await response.json();
+        setEligibilityResult(result);
+        setIsEligibilityLoading(false);
         console.log(result);
     }
 
@@ -79,6 +87,41 @@ export default (props) => {
                     </Header>
                 }
             >
+                <Modal
+                    visible={isModelVisible}
+                    onDismiss={() => {
+                        setIsModalVisible(false);
+                        setEligibilityResult();
+                    }
+                    }
+                    header="Eligibility Status"
+                >
+                    <div aria-live="polite" hidden={!isEligibilityLoading}>
+                        <Box
+                            margin={{ bottom: "xs", left: "l" }}
+                            color="text-body-secondary"
+                            textAlign="center"
+                        >
+                            Checking Eligibility...
+                        </Box>
+                        <LoadingBar variant="gen-ai-masked" />
+                    </div>
+
+                    {eligibilityResult && (
+                        <div className="scheme-details">
+                            <p><strong>Scheme Name:</strong> {eligibilityResult.schemeName}</p>
+                            <p>
+                                <strong>Eligibility: </strong>{' '}
+                                {eligibilityResult.eligibility ? (
+                                    <span className="icon green"><strong>✔️</strong></span>
+                                ) : (
+                                    <span className="icon red"><strong>❌</strong></span>
+                                )}
+                            </p>
+                            <p><strong>Reason:</strong> {eligibilityResult.reason}</p>
+                        </div>
+                    )}
+                </Modal>
                 <Cards
                     onSelectionChange={({ detail }) => {
                         setSelectedItems(detail.selectedItems);
@@ -114,20 +157,7 @@ export default (props) => {
                         { minWidth: 500, cards: 2 }
                     ]}
                     items={itemList}
-                    loading={isLoading}
-                    loadingText="Loading schemes"
                     trackBy="name"
-                    empty={
-                        <Box
-                            margin={{ vertical: "xs" }}
-                            textAlign="center"
-                            color="inherit"
-                        >
-                            <SpaceBetween size="m">
-                                <b>Enable location access to get featured schemes</b>
-                            </SpaceBetween>
-                        </Box>
-                    }
                     selectionType="single"
 
                     header={
@@ -145,6 +175,8 @@ export default (props) => {
                                         Clear
                                     </Button>
                                     <Button variant="primary" disabled={disabled} onClick={() => {
+                                        setIsModalVisible(true);
+                                        setIsEligibilityLoading(true);
                                         checkEligibility(`${LOCAL_HOST}/chat`, selectedItems[0].name);
                                     }}>
                                         Check Eligibility
@@ -155,7 +187,16 @@ export default (props) => {
                         </Header>
                     }
                 />
-
+                <div aria-live="polite" hidden={!isLoading}>
+                    <Box
+                        margin={{ bottom: "xs", left: "l" }}
+                        color="text-body-secondary"
+                        textAlign="center"
+                    >
+                        Loading featured schemes
+                    </Box>
+                    <LoadingBar variant="gen-ai-masked" />
+                </div>
             </Container>
         </ContentLayout>
 
