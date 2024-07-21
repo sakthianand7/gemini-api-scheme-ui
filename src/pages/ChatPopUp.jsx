@@ -54,6 +54,7 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     );
 };
 
+const LOCAL_HOST = "http://localhost:8000"
 const ChatPopUp = (props) => {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -63,18 +64,35 @@ const ChatPopUp = (props) => {
         setIsChatVisible(!isChatVisible);
     };
 
-    const handleSend = (message) => {
+    const handleSend = async (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
         setLoading(true);
-        setTimeout(() => {
-            handleReceive("This is a received message.");
-        }, 5000);
+        const response = await chat(message);
+        handleReceive(response);
     };
 
     const handleReceive = (messageText) => {
         setLoading(false);
         setMessages((prevMessages) => [...prevMessages, { type: 'received', text: messageText }]);
     };
+
+    async function chat(message) {
+        const input = {
+            message: message.text
+        };
+
+        const response = await fetch(`${LOCAL_HOST}/chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(input)
+
+        })
+        const result = await response.text();
+        return result;
+    }
+
     return (
 
         <div className="App">

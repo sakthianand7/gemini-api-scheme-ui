@@ -27,7 +27,6 @@ export default (props) => {
     const [isModelVisible, setIsModalVisible] = React.useState(false);
     const [eligibilityResult, setEligibilityResult] = React.useState();
 
-    console.log(props.profile);
     React.useEffect(() => {
         const fetchResults = async (url) => {
             try {
@@ -110,6 +109,7 @@ export default (props) => {
                     {eligibilityResult && (
                         <div className="scheme-details">
                             <p><strong>Scheme Name:</strong> {eligibilityResult.schemeName}</p>
+                            <p><strong>Profile:</strong> {props.currentProfile}</p>
                             <p>
                                 <strong>Eligibility: </strong>{' '}
                                 {eligibilityResult.eligibility ? (
@@ -177,7 +177,7 @@ export default (props) => {
                                     <Button variant="primary" disabled={disabled} onClick={() => {
                                         setIsModalVisible(true);
                                         setIsEligibilityLoading(true);
-                                        checkEligibility(`${LOCAL_HOST}/chat`, selectedItems[0].name);
+                                        checkEligibility(`${LOCAL_HOST}/checkEligibility`, selectedItems[0].name);
                                     }}>
                                         Check Eligibility
                                     </Button>
@@ -197,6 +197,7 @@ export default (props) => {
                     </Box>
                     <LoadingBar variant="gen-ai-masked" />
                 </div>
+                {props.chat}
             </Container>
         </ContentLayout>
 

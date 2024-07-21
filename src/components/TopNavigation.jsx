@@ -7,10 +7,9 @@ const LOCAL_HOST = "http://localhost:8000"
 
 let idProfileMapping = {};
 let profileList = [];
-export default ({ setQuery, setProfile }) => {
+export default ({ setCurrentProfile, setProfile }) => {
   const [searchInput, setSearchInput] = React.useState("");
   const [profileName, setProfileName] = React.useState("Self");
-
   const suggestions = [
     { value: "Am I eligible for Mudra Yojana" },
     { value: "Scheme to help with childcare expenses" },
@@ -46,10 +45,10 @@ export default ({ setQuery, setProfile }) => {
         }
 
         const data = await response.json();
-        console.log(data);
         idProfileMapping = transformArrayToKeyValue(data);
         profileList = transformArrayToIdText(data);
-        setProfile(idProfileMapping[profileName])
+        setProfile(idProfileMapping[profileName]);
+        setCurrentProfile(profileName);
       } catch (error) {
         console.error('Fetch error:', error);
       }
@@ -60,7 +59,6 @@ export default ({ setQuery, setProfile }) => {
 
   function handleSearchChange(value) {
     setSearchInput(value);
-    setQuery(value);
   }
   return (
     <TopNavigation
@@ -91,18 +89,17 @@ export default ({ setQuery, setProfile }) => {
         },
         {
           type: "button",
-          iconName: "settings",
-          ariaLabel: "Settings",
-          title: "Settings",
+          iconName: "edit",
+          ariaLabel: "edit",
+          title: "Manage Profiles",
           href: "/editProfile",
-          text: "Edit Profiles"
+          text: "Manage Profiles"
         },
         {
           type: "menu-dropdown",
-          iconName: "user-profile",
           text: profileName,
           items: profileList,
-          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[detail.id]) }
+          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[detail.id]); setCurrentProfile(detail.id) }
         }
       ]}
       search={

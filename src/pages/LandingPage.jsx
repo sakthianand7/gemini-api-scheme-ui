@@ -14,13 +14,13 @@ import ChatPopUp from './ChatPopUp';
 const LOCALE = 'en';
 let search_query = "";
 export default function LandingPage() {
-  const [searchQuery, setSearchQuery] = React.useState();
+  const [currentProfile, setCurrentProfile] = React.useState();
   const [navOpen, setNavOpen] = React.useState(false);
   const [profile, setProfile] = React.useState();
 
   return (
     <I18nProvider locale={LOCALE} messages={[messages]}>
-      <TopNavigation setQuery={setSearchQuery} setProfile={setProfile} />
+      <TopNavigation setCurrentProfile={setCurrentProfile} setProfile={setProfile} />
       <AppLayout
         navigationOpen={navOpen}
         toolsHide={true}
@@ -35,12 +35,14 @@ export default function LandingPage() {
                 <Route>
                   <Route path="/" element={<HomePage
                     profile={profile}
+                    currentProfile={currentProfile}
+                    chat={<ChatPopUp />
+                    }
                   />} />
                   <Route path="/editProfile" element={<EditProfileTable />} />
                 </Route>
               </Routes>
             </BrowserRouter>
-            <ChatPopUp/>
           </div>
         }
       />
