@@ -67,7 +67,6 @@ export default (props) => {
         const result = await response.json();
         setEligibilityResult(result);
         setIsEligibilityLoading(false);
-        console.log(result);
     }
 
     return (

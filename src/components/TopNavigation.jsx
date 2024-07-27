@@ -1,6 +1,6 @@
 import * as React from "react";
 import TopNavigation from "@cloudscape-design/components/top-navigation";
-import Autosuggest from "@cloudscape-design/components/autosuggest";
+import Input from "@cloudscape-design/components/input";
 import logo from './logo-small-top-navigation.svg';
 
 const LOCAL_HOST = "http://localhost:8000"
@@ -8,14 +8,9 @@ const LOCAL_HOST = "http://localhost:8000"
 let idProfileMapping = {};
 let profileList = [];
 export default ({ setCurrentProfile, setProfile }) => {
-  const [searchInput, setSearchInput] = React.useState("");
-  const [profileName, setProfileName] = React.useState("Self");
-  const suggestions = [
-    { value: "Am I eligible for Mudra Yojana" },
-    { value: "Scheme to help with childcare expenses" },
-    { value: "Scheme to help with medical bills" }
-  ];
 
+  const [searchInput, setSearchInput] = React.useState(localStorage.getItem("searchQuery"));
+  const [profileName, setProfileName] = React.useState((localStorage.getItem('profileName') === null) || (localStorage.getItem('profileName') === "") ? "Self" : localStorage.getItem('profileName'));
   const transformArrayToIdText = (array) => {
     return array.map(item => {
       const { id, text } = item; // Extract only id and text
@@ -49,6 +44,7 @@ export default ({ setCurrentProfile, setProfile }) => {
         profileList = transformArrayToIdText(data);
         setProfile(idProfileMapping[profileName]);
         setCurrentProfile(profileName);
+        localStorage.setItem('profileName', profileName);
       } catch (error) {
         console.error('Fetch error:', error);
       }
@@ -60,6 +56,14 @@ export default ({ setCurrentProfile, setProfile }) => {
   function handleSearchChange(value) {
     setSearchInput(value);
   }
+
+  const handleKeyPress = (event) => {
+    if (event.detail.keyCode === 13 && searchInput.trim().length > 0) {
+      localStorage.setItem('searchQuery', searchInput);
+      localStorage.setItem('profile', JSON.stringify(idProfileMapping[profileName]));
+      window.location.href = `/searchSchemes`
+    }
+  };
   return (
     <TopNavigation
       identity={{
@@ -71,14 +75,6 @@ export default ({ setCurrentProfile, setProfile }) => {
         }
       }}
       utilities={[
-        {
-          type: "button",
-          iconName: "search",
-          ariaLabel: "Button",
-          title: "Search",
-          text: "Search Schemes",
-          href: "/search"
-        },
         {
           type: "button",
           iconName: "notification",
@@ -99,16 +95,17 @@ export default ({ setCurrentProfile, setProfile }) => {
           type: "menu-dropdown",
           text: profileName,
           items: profileList,
-          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[detail.id]); setCurrentProfile(detail.id) }
+          onItemClick: ({ detail }) => { setProfileName(detail.id); setProfile(idProfileMapping[detail.id]); setCurrentProfile(detail.id); localStorage.setItem('profileName', detail.id); }
         }
       ]}
       search={
-        <Autosuggest
-          onChange={({ detail }) => handleSearchChange(detail.value)}
+        <Input
+          onChange={({ detail }) => { handleSearchChange(detail.value); localStorage.setItem('searchQuery', detail.value) }}
+          type="search"
           value={searchInput}
-          options={suggestions}
           ariaLabel="Search"
           placeholder="Search to find the right scheme for you..."
+          onKeyUp={handleKeyPress}
         />
       }
     />

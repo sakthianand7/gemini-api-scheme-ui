@@ -1,0 +1,128 @@
+/* components/SearchResultsPage.css */
+
+.search-results-page {
+  width: 100%;
+  /* Full width of the parent container */
+  max-width: 1200px;
+  /* Restrict maximum width if needed */
+  margin: 0 auto;
+  /* Center horizontally */
+  padding: 0 20px;
+  /* Add padding if needed */
+  box-sizing: border-box;
+  /* Include padding and border in width */
+}
+
+.search-result-card {
+  background: #ffffff;
+  /* White background for the card */
+  border: 1px solid #e1e1e1;
+  /* Light gray border for a subtle look */
+  border-radius: 8px;
+  /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  margin-bottom: 20px;
+  /* Space between cards */
+  overflow: hidden;
+  /* Ensure content doesn't overflow the rounded corners */
+  transition: box-shadow 0.3s, transform 0.3s;
+  /* Smooth transition effects */
+}
+
+.search-result-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Enhanced shadow on hover */
+  transform: translateY(-4px);
+  /* Slight lift effect */
+}
+
+.card-header {
+  background: #f7f7f7;
+  /* Light gray background for header */
+  color: #333;
+  /* Dark text color for readability */
+  padding: 16px;
+  /* Padding for consistent spacing */
+  border-bottom: 1px solid #e1e1e1;
+  /* Border to separate header from body */
+  display: flex;
+  flex-direction: column;
+}
+
+.result-title {
+  font-size: 20px;
+  font-weight: 700;
+  /* Bold title for better visibility */
+  color: #333;
+  /* Dark text color */
+  text-decoration: none;
+  margin-bottom: 4px;
+  /* Space below title */
+  font-family: 'Arial', sans-serif;
+  /* Use a clear, bold font */
+}
+
+.result-title:hover {
+  color: #007bff;
+  /* Highlight color on hover */
+  text-decoration: underline;
+}
+
+.result-url {
+  font-size: 14px;
+  color: #007bff;
+  /* Blue color for URL */
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-body {
+  padding: 16px;
+  /* Consistent padding */
+  border-top: 1px solid #e1e1e1;
+  /* Border to separate body from footer */
+}
+
+.result-details {
+  font-size: 16px;
+  /* Slightly larger font size for better readability */
+  color: #333;
+  /* Dark text color */
+  margin-bottom: 10px;
+  font-family: 'Arial', sans-serif;
+  /* Consistent font with the title */
+}
+
+.result-eligibility {
+  font-size: 14px;
+  color: #777;
+  /* Light grey for eligibility */
+}
+
+.eligible {
+  color: #28a745;
+  /* Green for eligible */
+  font-weight: 600;
+}
+
+.not-eligible {
+  color: #dc3545;
+  /* Red for not eligible */
+  font-weight: 600;
+}
+
+.card-footer {
+  background: #f7f7f7;
+  /* Light gray background for footer */
+  color: #333;
+  /* Dark text color */
+  padding: 12px 16px;
+  border-top: 1px solid #e1e1e1;
+  /* Border to separate footer from body */
+  display: flex;
+  justify-content: flex-end;
+  /* Align the button to the right */
+}

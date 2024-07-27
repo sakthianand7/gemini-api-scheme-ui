@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ChatPopup.css';
+import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
+import ReactMarkdown from 'react-markdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGem } from '@fortawesome/free-solid-svg-icons'; // Example icon
+
+import geminiIcon from './google-gemini-icon.png';
 
 const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     const [message, setMessage] = useState('');
+    const messagesEndRef = useRef(null);
 
     const handleSend = () => {
         if (message.trim()) {
@@ -16,7 +23,11 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
             handleSend();
         }
     };
-
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
     if (!isVisible) return null;
 
     return (
@@ -31,15 +42,17 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
                         key={index}
                         className={`chat-message ${msg.type === 'sent' ? 'sent' : 'received'}`}
                     >
-                        {msg.text}
+                        {msg.type === 'sent' ? (<>{msg.text}</>) : <><ReactMarkdown>{msg.text}</ReactMarkdown></>}
                     </div>
                 ))}
-                {loading && (
-                    <div className="loading-bar-container">
-                        <div className="loading-bar"></div>
-                    </div>
-                )}
+                <div ref={messagesEndRef} />
+
             </div>
+            {loading && (
+                <><LoadingBar variant="gen-ai-masked" />
+                <LoadingBar variant="gen-ai-masked" />
+                <LoadingBar variant="gen-ai-masked" /></>
+            )}
             <div className="chat-popup-footer">
                 <input
                     type="text"
@@ -97,7 +110,7 @@ const ChatPopUp = (props) => {
 
         <div className="App">
             <button className="chat-button" onClick={toggleChat}>
-                {isChatVisible ? 'Close Chat' : 'Open Chat'}
+                <img src={geminiIcon} alt="Gemini AI Icon" className="icon" />
             </button>
             <ChatWindow isVisible={isChatVisible} onClose={toggleChat} messages={messages} onSend={handleSend} loading={loading} />
         </div>

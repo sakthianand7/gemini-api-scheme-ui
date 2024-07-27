@@ -11,8 +11,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './HomePage';
 import EditProfileTable from './EditProfileTable';
 import ChatPopUp from './ChatPopUp';
+import SearchResults from './SearchResults';
 const LOCALE = 'en';
-let search_query = "";
 export default function LandingPage() {
   const [currentProfile, setCurrentProfile] = React.useState();
   const [navOpen, setNavOpen] = React.useState(false);
@@ -32,15 +32,15 @@ export default function LandingPage() {
           <div>
             <BrowserRouter>
               <Routes>
-                <Route>
-                  <Route path="/" element={<HomePage
-                    profile={profile}
-                    currentProfile={currentProfile}
-                    chat={<ChatPopUp />
-                    }
-                  />} />
-                  <Route path="/editProfile" element={<EditProfileTable />} />
-                </Route>
+                <Route path="/" element={<HomePage
+                  profile={profile}
+                  currentProfile={currentProfile}
+                  chat={<ChatPopUp />
+                  }
+                />} />
+                <Route path="/editProfile" element={<EditProfileTable />} />
+                <Route path="/searchSchemes" element={<SearchResults chat={<ChatPopUp />
+                } />} />
               </Routes>
             </BrowserRouter>
           </div>
