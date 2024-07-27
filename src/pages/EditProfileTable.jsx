@@ -97,6 +97,7 @@ export default function EditProfileTable(props) {
         try {
             const body = profileFormData;
             body.text = profileFormData.name;
+            body.id = profileFormData.name;
             body.gender = profileFormData.gender.value;
             body.disability_status = profileFormData.disability_status.value;
             body.marital_status = profileFormData.marital_status.value;
