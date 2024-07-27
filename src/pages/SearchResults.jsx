@@ -1,11 +1,6 @@
 import React from 'react';
 import SpaceBetween from "@cloudscape-design/components/space-between";
-import Button from "@cloudscape-design/components/button";
-import Link from "@cloudscape-design/components/link";
-import Header from "@cloudscape-design/components/header";
 import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
-import Cards from "@cloudscape-design/components/cards";
-
 import {
     Container,
     ContentLayout,
@@ -14,10 +9,12 @@ import {
 import Box from "@cloudscape-design/components/box";
 import SearchResultsPage from './SearchResultsPage';
 
-const LOCAL_HOST = "http://localhost:8000"
-let itemList = []
+const LOCAL_HOST = "http://localhost:8000";
+
 const SearchResults = (props) => {
     const [isLoading, setIsLoading] = React.useState(true);
+    const [itemList, setItemList] = React.useState([]);
+    const [error, setError] = React.useState(null);
 
     const query = localStorage.getItem('searchQuery');
     const profile = localStorage.getItem('profile');
@@ -34,46 +31,56 @@ const SearchResults = (props) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(messageBody)
-
-                })
+                });
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                itemList = data;
+                setItemList(data);
                 setIsLoading(false);
 
             } catch (error) {
                 console.error('Fetch error:', error);
+                setError(error.message);
+                setIsLoading(false);
             }
         };
         fetchResults(`${LOCAL_HOST}/searchScheme`);
 
-    }, []);
+    }, [query, profile]);
 
-    return (<ContentLayout
-    >
-        <Container
-        >
-            <SpaceBetween direction="horizontal" size='xl' />
-            <div hidden={isLoading}>
-                <SearchResultsPage results={itemList} />
-            </div>
-            <div aria-live="polite" hidden={!isLoading}>
-                <Box
-                    margin={{ bottom: "xs", left: "l" }}
-                    color="text-body-secondary"
-                    textAlign="center"
-                >
-                    Searching for <strong>{query}</strong>
-                </Box>
-                <LoadingBar variant="gen-ai-masked" />
-            </div>
-            {props.chat}
-        </Container>
-    </ContentLayout>)
+    return (
+        <ContentLayout>
+            <Container>
+                <SpaceBetween direction="horizontal" size='xl' />
+                {isLoading ? (
+                    <div aria-live="polite">
+                        <Box
+                            margin={{ bottom: "xs", left: "l" }}
+                            color="text-body-secondary"
+                            textAlign="center"
+                        >
+                            Searching for <strong>{query}</strong>
+                        </Box>
+                        <LoadingBar variant="gen-ai-masked" />
+                    </div>
+                ) : error ? (
+                    <Box
+                        margin={{ bottom: "xs", left: "l" }}
+                        color="text-danger"
+                        textAlign="center"
+                    >
+                        <strong>Error:</strong> {error}
+                    </Box>
+                ) : (
+                    <SearchResultsPage results={itemList} />
+                )}
+                {props.chat}
+            </Container>
+        </ContentLayout>
+    );
 };
 
 export default SearchResults;

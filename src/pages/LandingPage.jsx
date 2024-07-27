@@ -20,7 +20,9 @@ export default function LandingPage() {
 
   return (
     <I18nProvider locale={LOCALE} messages={[messages]}>
-      <TopNavigation setCurrentProfile={setCurrentProfile} setProfile={setProfile} />
+      <div style={{ position: 'sticky', top: 0, backgroundColor: '#f1f1f1', zIndex: 1000 }}>
+        <TopNavigation setCurrentProfile={setCurrentProfile} setProfile={setProfile} />
+      </div>
       <AppLayout
         navigationOpen={navOpen}
         toolsHide={true}
@@ -38,7 +40,8 @@ export default function LandingPage() {
                   chat={<ChatPopUp />
                   }
                 />} />
-                <Route path="/editProfile" element={<EditProfileTable />} />
+                <Route path="/editProfile" element={<EditProfileTable chat={<ChatPopUp />
+                }/>} />
                 <Route path="/searchSchemes" element={<SearchResults chat={<ChatPopUp />
                 } />} />
               </Routes>

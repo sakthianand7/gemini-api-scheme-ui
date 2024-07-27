@@ -2,14 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import './ChatPopup.css';
 import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
 import ReactMarkdown from 'react-markdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGem } from '@fortawesome/free-solid-svg-icons'; // Example icon
-
 import geminiIcon from './google-gemini-icon.png';
 
 const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef(null);
+    const latestMessageRef = useRef(null); // Ref for the start of the latest message
 
     const handleSend = () => {
         if (message.trim()) {
@@ -23,17 +21,19 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
             handleSend();
         }
     };
+
     useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (latestMessageRef.current) {
+            latestMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, [messages]);
+
     if (!isVisible) return null;
 
     return (
         <div className="chat-popup">
             <div className="chat-popup-header">
-                <h2>Chat</h2>
+                <h2>Ask Gemini</h2>
                 <button className="close" onClick={onClose}>&times;</button>
             </div>
             <div className="chat-popup-body">
@@ -41,17 +41,19 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
                     <div
                         key={index}
                         className={`chat-message ${msg.type === 'sent' ? 'sent' : 'received'}`}
+                        ref={index === messages.length - 1 ? latestMessageRef : null} // Assign ref to the latest message
                     >
-                        {msg.type === 'sent' ? (<>{msg.text}</>) : <><ReactMarkdown>{msg.text}</ReactMarkdown></>}
+                        {msg.type === 'sent' ? msg.text : <ReactMarkdown>{msg.text}</ReactMarkdown>}
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
-
             </div>
             {loading && (
-                <><LoadingBar variant="gen-ai-masked" />
-                <LoadingBar variant="gen-ai-masked" />
-                <LoadingBar variant="gen-ai-masked" /></>
+                <div className="loading-bars">
+                    <LoadingBar variant="gen-ai-masked" />
+                    <LoadingBar variant="gen-ai-masked" />
+                    <LoadingBar variant="gen-ai-masked" />
+                </div>
             )}
             <div className="chat-popup-footer">
                 <input
@@ -67,7 +69,8 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     );
 };
 
-const LOCAL_HOST = "http://localhost:8000"
+const LOCAL_HOST = "http://localhost:8000";
+
 const ChatPopUp = (props) => {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -80,8 +83,13 @@ const ChatPopUp = (props) => {
     const handleSend = async (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
         setLoading(true);
-        const response = await chat(message);
-        handleReceive(response);
+        try {
+            const response = await chat(message);
+            handleReceive(response);
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setLoading(false);
+        }
     };
 
     const handleReceive = (messageText) => {
@@ -90,29 +98,34 @@ const ChatPopUp = (props) => {
     };
 
     async function chat(message) {
-        const input = {
-            message: message.text
-        };
+        const input = { message: message.text };
 
         const response = await fetch(`${LOCAL_HOST}/chat`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(input)
+        });
 
-        })
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
         const result = await response.text();
         return result;
     }
 
     return (
-
         <div className="App">
             <button className="chat-button" onClick={toggleChat}>
                 <img src={geminiIcon} alt="Gemini AI Icon" className="icon" />
             </button>
-            <ChatWindow isVisible={isChatVisible} onClose={toggleChat} messages={messages} onSend={handleSend} loading={loading} />
+            <ChatWindow
+                isVisible={isChatVisible}
+                onClose={toggleChat}
+                messages={messages}
+                onSend={handleSend}
+                loading={loading}
+            />
         </div>
     );
 };

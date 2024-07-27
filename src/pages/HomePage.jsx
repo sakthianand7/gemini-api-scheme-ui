@@ -12,29 +12,24 @@ import {
     ContentLayout,
     Modal
 } from '@cloudscape-design/components';
-let itemList = [];
 
-const LOCAL_HOST = "http://localhost:8000"
+const LOCAL_HOST = "http://localhost:8000";
 
 export default (props) => {
-    const [
-        selectedItems,
-        setSelectedItems
-    ] = React.useState();
+    const [selectedItems, setSelectedItems] = React.useState([]);
     const [disabled, setDisabled] = React.useState(true);
     const [isLoading, setIsLoading] = React.useState(true);
     const [isEligibilityLoading, setIsEligibilityLoading] = React.useState(false);
     const [isModelVisible, setIsModalVisible] = React.useState(false);
     const [eligibilityResult, setEligibilityResult] = React.useState();
+    const [itemList, setItemList] = React.useState([]);
 
     React.useEffect(() => {
-        const fetchResults = async (url) => {
+        const fetchResults = async () => {
             try {
-                const response = await fetch(url, {
+                const response = await fetch(`${LOCAL_HOST}/search`, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                 });
 
                 if (!response.ok) {
@@ -42,31 +37,35 @@ export default (props) => {
                 }
 
                 const data = await response.json();
-
-                itemList = data;
-                setIsLoading(false);
+                setItemList(data);
             } catch (error) {
                 console.error('Fetch error:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
-        fetchResults(`${LOCAL_HOST}/search`);
 
+        fetchResults();
+
+        return () => {
+            // Cleanup if needed
+        };
     }, []);
 
     async function checkEligibility(url, schemeName) {
-        const messageBody = props.profile;
-        messageBody.governmentScheme = schemeName;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(messageBody)
-
-        })
-        const result = await response.json();
-        setEligibilityResult(result);
-        setIsEligibilityLoading(false);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...props.profile, governmentScheme: schemeName })
+            });
+            const result = await response.json();
+            setEligibilityResult(result);
+        } catch (error) {
+            console.error('Eligibility check error:', error);
+        } finally {
+            setIsEligibilityLoading(false);
+        }
     }
 
     return (
@@ -90,8 +89,7 @@ export default (props) => {
                     onDismiss={() => {
                         setIsModalVisible(false);
                         setEligibilityResult();
-                    }
-                    }
+                    }}
                     header="Eligibility Status"
                 >
                     <div aria-live="polite" hidden={!isEligibilityLoading}>
@@ -110,7 +108,7 @@ export default (props) => {
                             <p><strong>Scheme Name:</strong> {eligibilityResult.schemeName}</p>
                             <p><strong>Profile:</strong> {props.currentProfile}</p>
                             <p>
-                                <strong>Eligibility: </strong>{' '}
+                                <strong>Eligibility: </strong>
                                 {eligibilityResult.eligibility ? (
                                     <span className="icon green"><strong>✔️</strong></span>
                                 ) : (
@@ -124,9 +122,8 @@ export default (props) => {
                 <Cards
                     onSelectionChange={({ detail }) => {
                         setSelectedItems(detail.selectedItems);
-                        setDisabled(false);
-                    }
-                    }
+                        setDisabled(detail.selectedItems.length === 0);
+                    }}
                     selectedItems={selectedItems}
                     ariaLabels={{
                         itemSelectionLabel: (e, i) => `select ${i.name}`,
@@ -158,19 +155,14 @@ export default (props) => {
                     items={itemList}
                     trackBy="name"
                     selectionType="single"
-
                     header={
                         <Header
                             actions={
-                                <SpaceBetween
-                                    direction="horizontal"
-                                    size="xs"
-                                >
+                                <SpaceBetween direction="horizontal" size="xs">
                                     <Button variant="normal" disabled={disabled} onClick={() => {
-                                        setSelectedItems()
-                                        setDisabled(true)
-                                    }
-                                    }>
+                                        setSelectedItems([]);
+                                        setDisabled(true);
+                                    }}>
                                         Clear
                                     </Button>
                                     <Button variant="primary" disabled={disabled} onClick={() => {
@@ -182,8 +174,7 @@ export default (props) => {
                                     </Button>
                                 </SpaceBetween>
                             }
-                        >
-                        </Header>
+                        />
                     }
                 />
                 <div aria-live="polite" hidden={!isLoading}>
@@ -199,6 +190,5 @@ export default (props) => {
                 {props.chat}
             </Container>
         </ContentLayout>
-
     );
-}
+};
