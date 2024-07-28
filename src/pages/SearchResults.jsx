@@ -3,8 +3,7 @@ import SpaceBetween from "@cloudscape-design/components/space-between";
 import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
 import {
     Container,
-    ContentLayout,
-    Modal
+    ContentLayout
 } from '@cloudscape-design/components';
 import Box from "@cloudscape-design/components/box";
 import SearchResultsPage from './SearchResultsPage';

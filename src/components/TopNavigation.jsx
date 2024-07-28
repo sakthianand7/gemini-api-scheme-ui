@@ -1,12 +1,15 @@
 import * as React from "react";
 import TopNavigation from "@cloudscape-design/components/top-navigation";
 import Input from "@cloudscape-design/components/input";
-import logo from './logo-small-top-navigation.svg';
 
 const LOCAL_HOST = "http://localhost:8000"
 
 let idProfileMapping = {};
 let profileList = [];
+
+/**
+ * Top Nav bar
+ */
 export default ({ setCurrentProfile, setProfile }) => {
 
   const [searchInput, setSearchInput] = React.useState(localStorage.getItem("searchQuery"));
@@ -68,9 +71,9 @@ export default ({ setCurrentProfile, setProfile }) => {
     <TopNavigation
       identity={{
         href: "/",
-        title: "Benefict",
+        title: "Sherlock Schemes",
         logo: {
-          src: logo,
+          src: '/sherlock-schemes.png',
           alt: "Service"
         }
       }}

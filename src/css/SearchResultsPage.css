@@ -126,3 +126,38 @@
   justify-content: flex-end;
   /* Align the button to the right */
 }
+
+.compare-scheme-button {
+  display: flex;
+  justify-content: flex-end; 
+}
+
+.modal-table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid black; /* Black border for the outer line */
+}
+
+.modal-th, .modal-td {
+  border: 1px solid #0e0707;
+  padding: 8px;
+}
+
+.modal-th {
+  font-weight: bold;
+  text-transform: capitalize;
+  background-color: #f2f2f2;
+}
+
+.modal-td {
+  font-size: 14px;
+}
+
+.modal-key {
+  font-weight: bold;
+  background-color: #e0e0e0;
+  text-align: left;
+  font-size: 14px;
+  padding: 12px; /* Added padding */
+  border: 1px solid #333;
+}

@@ -17,7 +17,7 @@ export default function LandingPage() {
   const [currentProfile, setCurrentProfile] = React.useState();
   const [navOpen, setNavOpen] = React.useState(false);
   const [profile, setProfile] = React.useState();
-
+  
   return (
     <I18nProvider locale={LOCALE} messages={[messages]}>
       <div style={{ position: 'sticky', top: 0, backgroundColor: '#f1f1f1', zIndex: 1000 }}>

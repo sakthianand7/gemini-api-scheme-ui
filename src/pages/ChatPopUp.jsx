@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ChatPopup.css';
+import '../css/ChatPopup.css';
 import LoadingBar from "@cloudscape-design/chat-components/loading-bar";
 import ReactMarkdown from 'react-markdown';
 import geminiIcon from './google-gemini-icon.png';
 
+const LOCAL_HOST = "http://localhost:8000";
+
+/**
+ * Chat window
+ */
 const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef(null);
@@ -69,8 +74,9 @@ const ChatWindow = ({ isVisible, onClose, messages, onSend, loading }) => {
     );
 };
 
-const LOCAL_HOST = "http://localhost:8000";
-
+/**
+ * Chat Pop up
+ */
 const ChatPopUp = (props) => {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [messages, setMessages] = useState([]);

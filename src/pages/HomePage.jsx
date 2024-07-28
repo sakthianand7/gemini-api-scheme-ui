@@ -72,12 +72,22 @@ export default (props) => {
         <ContentLayout
             header={
                 <Header variant="h2" textAlign="center">
-                    Benefict: Unlock Government Benefits You Deserve
+                    Sherlock Schemes: Unlock the Benefits You Deserve
                 </Header>
             }
         >
             <SpaceBetween direction="horizontal" size='l' />
             <Container
+                media={{
+                    content: (
+                        <img
+                            src="/home-picture.jpg"
+                            alt="placeholder"
+                        />
+                    ),
+                    height: 90,
+                    position: "top"
+                }}
                 header={
                     <Header variant="h3" description="Government schemes with high public interest or social impact">
                         Featured Schemes
