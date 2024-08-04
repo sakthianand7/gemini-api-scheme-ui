@@ -179,3 +179,44 @@
   cursor: pointer;
 }
 
+.voice-search-button{
+  background: none;
+  border: none;
+  color: #f2f2f7;
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.voice-search-button:hover, .play-button:hover {
+  color: #f1f1f5;
+}
+
+.voice-search-button:active, .play-button:active {
+  color: #fefeff;
+}
+
+/* Other CSS rules */
+/* Other CSS rules */
+
+.play-button {
+  color: black;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+
+.play-button:hover {
+  color: #2A2A3C; /* Color on hover */
+}
+
+.play-button:active {
+  color: #141421; /* Color when button is pressed */
+}
+
+

@@ -1,0 +1,63 @@
+/* General styles */
+.header {
+    font-size: 2rem;
+    color: #333; /* Ensure good contrast */
+}
+
+.home-picture {
+    max-width: 100%;
+    height: auto;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: #666; /* Ensure good contrast */
+}
+
+/* Modal styles */
+.modal {
+    background-color: #fff; /* Ensure sufficient contrast */
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+.scheme-details {
+    margin: 1rem 0;
+    color: #333; /* Ensure good contrast */
+}
+
+.scheme-details .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.scheme-details .icon.green {
+    color: #4caf50; /* Ensure color visibility */
+}
+
+.scheme-details .icon.red {
+    color: #f44336; /* Ensure color visibility */
+}
+
+/* Card styles */
+.card-link {
+    color: #007bff; /* Ensure link color stands out */
+    text-decoration: none;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+.card-link:focus {
+    outline: 2px solid #007bff; /* Ensure focus is visible */
+}
+
+/* Ensure good contrast between text and background */
+body {
+    background-color: #f4f4f4; /* Light background for good contrast */
+    color: #333; /* Dark text for readability */
+}

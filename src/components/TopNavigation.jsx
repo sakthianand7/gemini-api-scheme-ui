@@ -79,11 +79,14 @@ export default ({ setCurrentProfile, setProfile }) => {
       }}
       utilities={[
         {
-          type: "button",
+          type: "menu-dropdown",
           iconName: "notification",
-          title: "Notifications",
           ariaLabel: "Notifications (unread)",
           badge: true,
+          items: [
+            { id: '1', text: '📢 2 new matching schemes for profile: Mother'},
+            { id: '2', text: '📢 1 new matching schemes for profile: Brother' }
+          ],
           disableUtilityCollapse: false
         },
         {
